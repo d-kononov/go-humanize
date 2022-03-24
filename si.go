@@ -42,10 +42,10 @@ func revfmap(in map[float64]string) map[string]float64 {
 var riParseRegex *regexp.Regexp
 
 func init() {
-	initMapsWithTable(nil)
+	InitMapsWithTable(nil)
 }
 
-func initMapsWithTable(prefixTable map[float64]string) {
+func InitMapsWithTable(prefixTable map[float64]string) {
 	siPrefixTable = siPrefixTableDefault
 	if prefixTable != nil && len(prefixTable) > 15 {
 		siPrefixTable = prefixTable
