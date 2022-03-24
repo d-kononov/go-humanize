@@ -1,3 +1,3 @@
-module github.com/dustin/go-humanize
+module go-humanize
 
-go 1.16
+go 1.17

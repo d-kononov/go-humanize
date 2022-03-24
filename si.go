@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-var siPrefixTable = map[float64]string{
+var siPrefixTableDefault = map[float64]string{
 	-24: "y", // yocto
 	-21: "z", // zepto
 	-18: "a", // atto
@@ -27,7 +27,8 @@ var siPrefixTable = map[float64]string{
 	24:  "Y", // yotta
 }
 
-var revSIPrefixTable = revfmap(siPrefixTable)
+var siPrefixTable map[float64]string
+var revSIPrefixTable map[string]float64
 
 // revfmap reverses the map and precomputes the power multiplier
 func revfmap(in map[float64]string) map[string]float64 {
@@ -41,6 +42,14 @@ func revfmap(in map[float64]string) map[string]float64 {
 var riParseRegex *regexp.Regexp
 
 func init() {
+	initMapsWithTable(nil)
+}
+
+func initMapsWithTable(prefixTable map[float64]string) {
+	siPrefixTable = siPrefixTableDefault
+	if prefixTable != nil && len(prefixTable) > 15 {
+		siPrefixTable = prefixTable
+	}
 	ri := `^([\-0-9.]+)\s?([`
 	for _, v := range siPrefixTable {
 		ri += v
@@ -48,6 +57,7 @@ func init() {
 	ri += `]?)(.*)`
 
 	riParseRegex = regexp.MustCompile(ri)
+	revSIPrefixTable = revfmap(siPrefixTable)
 }
 
 // ComputeSI finds the most appropriate SI prefix for the given number
